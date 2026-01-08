@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"*.in": "c",
+		"test_main.h": "c",
+		"test_memory.h": "c"
+	}
+}

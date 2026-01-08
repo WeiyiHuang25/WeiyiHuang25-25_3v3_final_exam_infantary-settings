@@ -1,0 +1,32 @@
+{
+    "files.associations": {
+        "robo_shoot.h": "c",
+        "robo_usb.h": "c",
+        "robo_aa.h": "c",
+        "main.h": "c",
+        "robo_control.h": "c",
+        "robo_gimbal.h": "c",
+        "robo_chassis.h": "c",
+        "can_if.h": "c",
+        "cstdlib": "c",
+        "chassis_power_control.h": "c"
+    },
+    "MicroPython.executeButton": [
+        {
+            "text": "▶",
+            "tooltip": "Run",
+            "alignment": "left",
+            "command": "extension.executeFile",
+            "priority": 3.5
+        }
+    ],
+    "MicroPython.syncButton": [
+        {
+            "text": "$(sync)",
+            "tooltip": "sync",
+            "alignment": "left",
+            "command": "extension.execute",
+            "priority": 4
+        }
+    ]
+}
