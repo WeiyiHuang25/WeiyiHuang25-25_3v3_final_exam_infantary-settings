@@ -181,8 +181,10 @@ void AHRS_Update(AHRS_t *AHRS)
  */
 void AHRS_Get_Angle(const float quat[4], Euler_Data_t *euler_angle)
 {
+	float temp;
 	euler_angle->yaw = math_atan2(2.0f * (quat[0] * quat[3] + quat[1] * quat[2]), 2.0f * (quat[0] * quat[0] + quat[1] * quat[1]) - 1.0f);
-	euler_angle->pitch = math_atan2(2.0f * (quat[0] * quat[1] + quat[2] * quat[3]), 2.0f * (quat[0] * quat[0] + quat[3] * quat[3]) - 1.0f);
+	temp = math_atan2(2.0f * (quat[0] * quat[1] + quat[2] * quat[3]), 2.0f * (quat[0] * quat[0] + quat[3] * quat[3]) - 1.0f);
+	euler_angle->pitch = temp > 0 ? temp-PI : temp+PI; // due to the fixing diraction change, pitch need to be transformed.
 	euler_angle->roll = asinf(-2.0f * (quat[1] * quat[3] - quat[0] * quat[2]));
 }
 

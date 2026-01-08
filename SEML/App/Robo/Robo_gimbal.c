@@ -1,9 +1,7 @@
 #include "Robo_Gimbal.h"
 Task_Gimbal_t gimbal;
 
-float test_yaw, test_pit;
-float test_imu_pitch, test_exp_pitch_angle, test_send_pitch, test_send_yaw, test_noCrosingZero_exp_pitc, test_corr, test_temp2, test_exp_speed;
-
+float test_imu_pitch, test_exp_pitch, test_send;
 /**
  * @brief 云台任务初始化
  * 该函数执行云台任务相关的初始化操作
@@ -39,7 +37,7 @@ __weak void Gimbal_Init(void)
  */
 __weak void Gimbal_Task(void *conifg)
 {
-	float temp,temp1,temp2, corrected_imu_pitch;
+	float temp,temp1,temp2;
 	static float power;
 	// 获取话题
 	Robo_Get_Message_Cmd("Set_Gimbal_Yaw_Angle", gimbal.yaw.expect_angle);
@@ -66,48 +64,27 @@ __weak void Gimbal_Task(void *conifg)
 		gimbal.yaw.send_data = Basic_PID_Controller(&gimbal.yaw.speed_PID,gimbal.yaw.expect_speed,Get_Motor_Speed_Data(gimbal.yaw.motor));
 	}
 	Motor_Send_Data(gimbal.yaw.motor,gimbal.yaw.send_data);
-	
-	
-	test_send_yaw = gimbal.yaw.send_data;
 
 	
 	// pitch闭环
-	
-	
-	corrected_imu_pitch = gimbal.imu->pitch > 0 ? gimbal.imu->pitch : 2 * PI + gimbal.imu->pitch; // correct imu pitch
-	
-	
-	// temp = Zero_Crossing_Process(2 * PI, gimbal.pitch.expect_angle + PI, corrected_imu_pitch);
 	temp = gimbal.pitch.expect_angle + PI;
-    test_noCrosingZero_exp_pitc = gimbal.pitch.expect_angle;
-	test_exp_pitch_angle=temp;
-	test_imu_pitch=gimbal.imu->pitch;
-	test_corr = corrected_imu_pitch;
-	
-	
 	Robo_Get_Message_Cmd("Set_AA_on", temp1);
 	if(temp1)
 	{
-		gimbal.pitch.expect_speed = Basic_PID_Controller(&gimbal.pitch.position_PID, temp, corrected_imu_pitch);
+		gimbal.pitch.expect_speed = Basic_PID_Controller(&gimbal.pitch.position_PID, temp, gimbal.imu->pitch + PI);
 		temp2 = (-9e-08f * gimbal.pitch.expect_angle + 0.0002f) * gimbal.pitch.expect_angle + 0.6147f;
 		gimbal.pitch.send_data = Basic_PID_Controller(&gimbal.pitch.speed_PID,gimbal.pitch.expect_speed,Get_Motor_Speed_Data(gimbal.pitch.motor)) +temp2;
 	}
 	else
 	{
-		gimbal.pitch.expect_speed = Basic_PID_Controller(&gimbal.pitch.position_PID, temp, corrected_imu_pitch);
+		gimbal.pitch.expect_speed = Basic_PID_Controller(&gimbal.pitch.position_PID, temp, gimbal.imu->pitch + PI);
 		temp2 = (-9e-08f * gimbal.pitch.expect_angle + 0.0002f) * gimbal.pitch.expect_angle + 0.6147f;
 		gimbal.pitch.send_data = Basic_PID_Controller(&gimbal.pitch.speed_PID,gimbal.pitch.expect_speed,Get_Motor_Speed_Data(gimbal.pitch.motor)) +temp2;
 	}
-	
-	test_temp2 = temp2;
-	test_exp_speed = gimbal.pitch.expect_speed;
-	
-	Motor_Send_Data(gimbal.pitch.motor, gimbal.pitch.send_data);
-	
-	test_yaw = gimbal.yaw.expect_speed;
-	test_pit = gimbal.pitch.expect_speed;
-	test_send_pitch = gimbal.pitch.send_data;
-	
+	test_exp_pitch = gimbal.pitch.expect_angle;
+	test_imu_pitch = gimbal.imu->pitch;
+	test_send = -gimbal.pitch.send_data;
+	Motor_Send_Data(gimbal.pitch.motor,gimbal.pitch.send_data);
 
 	// 发送数据
 	Robo_Push_Message_Cmd("Gibmal_Yaw_Vel", gimbal.yaw.expect_speed);

@@ -151,8 +151,8 @@
 
 //Robo_Control.c
 #define Gimbal_Follow_Offset -0.6f
-#define MAX_Pitch 0.4f
-#define MIN_Pitch -0.3f
+#define MAX_Pitch 0.3f
+#define MIN_Pitch -0.4f
 
 
 
