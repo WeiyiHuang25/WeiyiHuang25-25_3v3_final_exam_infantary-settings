@@ -321,6 +321,7 @@ float startup_front;
 Motor_t *motor;
 float temp1, temp2;
 float odom_yaw, odom_pitch;
+float test_pitch, test_yaw;
 
 void AA_Init()
 {
@@ -338,7 +339,8 @@ void AA_Init()
 void AA_Task(void *config)
 {
 		auto_aiming_control.receive = get_received_packet();
-		
+		test_pitch = auto_aiming_control.receive.pitch;
+        test_yaw = auto_aiming_control.receive.yaw;
 		//Set Solve Trajectory Params
 		st.k=K;
 		st.bullet_type =  BULLET_17;

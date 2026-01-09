@@ -124,70 +124,89 @@ __weak void Robo_Control_Task(void *config)
 			break;
 		}
 	} else if (RC_Ctrl.rc.s1 == RC_S_UP) {
-		control.remote_source = Scource_Key;
-		
+		control.remote_source = Scource_Remote;
 		robo_control_flag.remote_off = 0;
+		Remote_Control();
+		switch (RC_Ctrl.rc.s2)
+		{
+		case RC_S_DOWM:
+			temp = Shoot_Off;
+			Robo_Push_Message_Cmd("Shoot_Mode", temp);
+			break;
+		case RC_S_MID:
+			temp = Shoot_Ready;
+			Robo_Push_Message_Cmd("Shoot_Mode", temp);
+			break;
+		case RC_S_UP:
+			temp = Shoot_Fire;
+			Robo_Push_Message_Cmd("Shoot_Mode", temp);
+			break;
+		default:
+			break;
+		}
+		flag = 1;
+	    Robo_Push_Message_Cmd("Set_AA_on", flag);
 		//MyRegister();
-		Chassis_KEY_Ctrl();
-		GIMBAL_KEY_Ctrl();
+		// Chassis_KEY_Ctrl();
+		// GIMBAL_KEY_Ctrl();
 		/*temp = Shoot_Ready;
 		Robo_Push_Message_Cmd("Shoot_Mode", temp);
 		if(keyboard.mouse_press_left.status == Press_Hold)
 		{
 			temp = Shoot_Fire;
 			Robo_Push_Message_Cmd("Shoot_Mode", temp);
-		}
-		else if(keyboard.mouse_press_left.status == Single_Clink)
-		{
-			temp = Shoot_Single_Shot;
-			Robo_Push_Message_Cmd("Shoot_Mode", temp);
-		}*/
-		// //Auto_Control();
-		// // s2模式
-		// switch (RC_Ctrl.rc.s2)
-		// {
-		// case RC_S_DOWM:
-		// 	temp = Shoot_Off;
-		// 	Robo_Push_Message_Cmd("Shoot_Mode", temp);
-		// 	break;
-		// case RC_S_MID:
-		// 	//Auto_Control();
-		// 	temp = Shoot_Off;
-		// 	Robo_Push_Message_Cmd("Shoot_Mode", temp);
-		// 	break;
-		// case RC_S_UP:
-			// 鼠标左键模式
-		
-			if(RC_Ctrl.mouse.press_l)
-			{
-				temp = Shoot_Fire;
-				Robo_Push_Message_Cmd("shoot_mode", temp);
-			}
-			else
-			{
-				temp = Shoot_Ready;
-				Robo_Push_Message_Cmd("shoot_mode", temp);
-			}
-		// 	break;
-		// default:
-		// 	break;
 		// }
-		//鼠标右键模式
-		if(RC_Ctrl.mouse.press_r)
-		{
-			flag = 1;
-			Robo_Push_Message_Cmd("Set_AA_on", flag);
-		}
-		else
-		{
-			Robo_Get_Message_Cmd("Set_AA_on", temp);
-			if(temp == 1)
-			{
-				Robo_Push_Message_Cmd("Set_Gimbal_Yaw_Angle", AHRS.euler_angle.yaw);
-				Robo_Push_Message_Cmd("Set_Gimbal_Pitch_Angle", AHRS.euler_angle.pitch);
-			}
-			flag = 0;
-			Robo_Push_Message_Cmd("Set_AA_on", flag);
-		}
+		// else if(keyboard.mouse_press_left.status == Single_Clink)
+		// {
+		// 	temp = Shoot_Single_Shot;
+		// 	Robo_Push_Message_Cmd("Shoot_Mode", temp);
+		// }*/
+		// // //Auto_Control();
+		// // // s2模式
+		// // switch (RC_Ctrl.rc.s2)
+		// // {
+		// // case RC_S_DOWM:
+		// // 	temp = Shoot_Off;
+		// // 	Robo_Push_Message_Cmd("Shoot_Mode", temp);
+		// // 	break;
+		// // case RC_S_MID:
+		// // 	//Auto_Control();
+		// // 	temp = Shoot_Off;
+		// // 	Robo_Push_Message_Cmd("Shoot_Mode", temp);
+		// // 	break;
+		// // case RC_S_UP:
+		// 	// 鼠标左键模式
+		
+		// 	if(RC_Ctrl.mouse.press_l)
+		// 	{
+		// 		temp = Shoot_Fire;
+		// 		Robo_Push_Message_Cmd("shoot_mode", temp);
+		// 	}
+		// 	else
+		// 	{
+		// 		temp = Shoot_Ready;
+		// 		Robo_Push_Message_Cmd("shoot_mode", temp);
+		// 	}
+		// // 	break;
+		// // default:
+		// // 	break;
+		// // }
+		// //鼠标右键模式
+		// if(RC_Ctrl.mouse.press_r)
+		// {
+		// 	flag = 1;
+		// 	Robo_Push_Message_Cmd("Set_AA_on", flag);
+		// }
+		// else
+		// {
+		// 	Robo_Get_Message_Cmd("Set_AA_on", temp);
+		// 	if(temp == 1)
+		// 	{
+		// 		Robo_Push_Message_Cmd("Set_Gimbal_Yaw_Angle", AHRS.euler_angle.yaw);
+		// 		Robo_Push_Message_Cmd("Set_Gimbal_Pitch_Angle", AHRS.euler_angle.pitch);
+		// 	}
+		// 	flag = 0;
+		// 	Robo_Push_Message_Cmd("Set_AA_on", flag);
+		// }
 	}
 }
