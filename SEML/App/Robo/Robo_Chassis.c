@@ -76,6 +76,7 @@ __weak void Chassis_Task(void *conifg)
 	float temp, temp2, temp_array[4];
 	float alpha = 0.2;
 	float temp_vx = 0, temp_vy = 0;
+	int roll;
 	
 	// 获取话题
 	Robo_Get_Message_Cmd("Set_Move_X_Speed", velocity.vx);
@@ -84,6 +85,7 @@ __weak void Chassis_Task(void *conifg)
 	Robo_Get_Message_Cmd("Set_Chassis_Yaw_Angle", follow_yaw_angle);
 	Robo_Get_Message_Cmd("Real_Chassis_Yaw_Angle", real_yaw_angle);
 	Robo_Get_Message_Cmd("Chassis_Mode", chassis.mode);
+	Robo_Get_Message_Cmd("Set_Roll", roll);
 	test_follow_yaw = follow_yaw_angle;
 	test_real_yaw = real_yaw_angle;
 	// 功率限制
@@ -103,11 +105,11 @@ __weak void Chassis_Task(void *conifg)
 	//chassis.expect_speed = velocity;
 	// 获取旋转方式
 	//if(RC_Ctrl.rc.s1 == 1 || RC_Ctrl.keyboard.key_Shift == 1)
-	if(RC_Ctrl.keyboard.key_Shift == 1)
+	if(roll != 0)
 	{
-		if (RC_Ctrl.rc.ch0 != DR16_RC_OFFSET || RC_Ctrl.rc.ch1 != DR16_RC_OFFSET) {
+		if (roll == 1) {
 			chassis.expect_speed.vw = 2.0f * PI;
-		} else {
+		} else if(roll == 2){
 			chassis.expect_speed.vw = 5.0f * PI;
 		}
 		//chassis.expect_speed.vw *= ((0.575f/70)*(max_power-50) + 0.625);

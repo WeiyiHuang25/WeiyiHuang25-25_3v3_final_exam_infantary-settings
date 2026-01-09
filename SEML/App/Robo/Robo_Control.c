@@ -76,7 +76,7 @@ __weak void Robo_Control_Task(void *config)
 {
 	uint32_t temp;
 	float temp_f;
-	int flag;
+	int flag, roll;
 	temp_f = AHRS.euler_angle.yaw;
 	Robo_Push_message_Data("Set_Gimbal_Imu_Data", (void *)&AHRS.euler_angle, sizeof(AHRS.euler_angle));
 	Robo_Push_Message_Cmd("Real_Chassis_Yaw_Angle", temp_f);
@@ -107,18 +107,24 @@ __weak void Robo_Control_Task(void *config)
 			Robo_Push_Message_Cmd("Shoot_Mode", temp);
 			flag = 0;
 			Robo_Push_Message_Cmd("Set_AA_on", flag);
+            roll = 0;
+			Robo_Push_Message_Cmd("Set_Roll", roll);
 			break;
-		case RC_S_MID:
-			temp = Shoot_Ready;
+		case RC_S_MID:// start AA + low speed roll
+			temp = Shoot_Off;
 			Robo_Push_Message_Cmd("Shoot_Mode", temp);
-			flag = 0;
+			flag = 1;
 			Robo_Push_Message_Cmd("Set_AA_on", flag);
+            roll = 1;
+			Robo_Push_Message_Cmd("Set_Roll", roll);
 			break;
-		case RC_S_UP:
-			temp = Shoot_Fire;
+		case RC_S_UP:// start AA+high speed roll
+			temp = Shoot_Off;
 			Robo_Push_Message_Cmd("Shoot_Mode", temp);
-			flag = 0;
+			flag = 1;
 			Robo_Push_Message_Cmd("Set_AA_on", flag);
+            roll = 2;
+			Robo_Push_Message_Cmd("Set_Roll", roll);
 			break;
 		default:
 			break;
@@ -146,6 +152,8 @@ __weak void Robo_Control_Task(void *config)
 		}
 		flag = 1;
 	    Robo_Push_Message_Cmd("Set_AA_on", flag);
+        roll = 0;
+		Robo_Push_Message_Cmd("Set_Roll", roll);
 		//MyRegister();
 		// Chassis_KEY_Ctrl();
 		// GIMBAL_KEY_Ctrl();
