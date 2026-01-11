@@ -242,10 +242,10 @@
 
 //Robo_Shoot.c
 //Motor Electric param
-#define FRIC_L_ID 2
+#define FRIC_L_ID 1
 #define FRIC_L_CAN can2
 
-#define FRIC_R_ID 1
+#define FRIC_R_ID 2
 #define FRIC_R_CAN can2
 
 #define DIAL_ID 3
