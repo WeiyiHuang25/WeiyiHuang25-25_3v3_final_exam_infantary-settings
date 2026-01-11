@@ -1,6 +1,7 @@
 #include "Robo_Control.h"
 #include "Robo_Common.h"
 Task_Control_t control;
+uint32_t test_shoot;
 
 __weak void Remote_Control(void)
 {
@@ -75,6 +76,7 @@ __weak void Robo_Control_Init(void *config)
 __weak void Robo_Control_Task(void *config)
 {
 	uint32_t temp;
+	uint32_t shoot_temp;
 	float temp_f;
 	int flag, roll;
 	temp_f = AHRS.euler_angle.yaw;
@@ -111,20 +113,20 @@ __weak void Robo_Control_Task(void *config)
 			Robo_Push_Message_Cmd("Set_Roll", roll);
 			break;
 		case RC_S_MID:// start AA + low speed roll
-			temp = Shoot_Off;
-			Robo_Push_Message_Cmd("Shoot_Mode", temp);
 			flag = 1;
 			Robo_Push_Message_Cmd("Set_AA_on", flag);
             roll = 1;
 			Robo_Push_Message_Cmd("Set_Roll", roll);
+            Robo_Get_Message_Cmd("Shoot_Mode_temp", shoot_temp);
+			Robo_Push_Message_Cmd("Shoot_Mode", shoot_temp);
 			break;
 		case RC_S_UP:// start AA+high speed roll
-			temp = Shoot_Off;
-			Robo_Push_Message_Cmd("Shoot_Mode", temp);
 			flag = 1;
 			Robo_Push_Message_Cmd("Set_AA_on", flag);
             roll = 2;
 			Robo_Push_Message_Cmd("Set_Roll", roll);
+            Robo_Get_Message_Cmd("Shoot_Mode_temp", shoot_temp);
+			Robo_Push_Message_Cmd("Shoot_Mode", shoot_temp);
 			break;
 		default:
 			break;
@@ -132,28 +134,16 @@ __weak void Robo_Control_Task(void *config)
 	} else if (RC_Ctrl.rc.s1 == RC_S_UP) {
 		control.remote_source = Scource_Remote;
 		robo_control_flag.remote_off = 0;
+		temp = Shoot_Off;
+		// Robo_Push_Message_Cmd("Shoot_Mode", temp);
 		Remote_Control();
-		switch (RC_Ctrl.rc.s2)
-		{
-		case RC_S_DOWM:
-			temp = Shoot_Off;
-			Robo_Push_Message_Cmd("Shoot_Mode", temp);
-			break;
-		case RC_S_MID:
-			temp = Shoot_Ready;
-			Robo_Push_Message_Cmd("Shoot_Mode", temp);
-			break;
-		case RC_S_UP:
-			temp = Shoot_Fire;
-			Robo_Push_Message_Cmd("Shoot_Mode", temp);
-			break;
-		default:
-			break;
-		}
 		flag = 1;
 	    Robo_Push_Message_Cmd("Set_AA_on", flag);
         roll = 0;
 		Robo_Push_Message_Cmd("Set_Roll", roll);
+        Robo_Get_Message_Cmd("Shoot_Mode_temp", shoot_temp);
+		Robo_Push_Message_Cmd("Shoot_Mode", shoot_temp);
+		// test_shoot = shoot_temp;
 		//MyRegister();
 		// Chassis_KEY_Ctrl();
 		// GIMBAL_KEY_Ctrl();

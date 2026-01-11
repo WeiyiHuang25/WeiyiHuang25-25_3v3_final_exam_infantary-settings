@@ -150,7 +150,7 @@
 // #else
 
 //Robo_Control.c
-#define Gimbal_Follow_Offset 3.14f
+#define Gimbal_Follow_Offset -0.8f
 #define MAX_Pitch 0.3f
 #define MIN_Pitch -0.4f
 
@@ -169,16 +169,16 @@
 #define Rotation_Direction CW
 
 //Motor Electric param
-#define FL_ID 3
+#define FL_ID 4
 #define FL_CAN can1
 
-#define FR_ID 2
+#define FR_ID 3
 #define FR_CAN can1
 
-#define BL_ID 4
+#define BL_ID 2
 #define BL_CAN can1
 
-#define BR_ID 6
+#define BR_ID 1
 #define BR_CAN can1
 
 //PID param

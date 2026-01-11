@@ -80,7 +80,7 @@ float last_non_zero_pitch = 0.0f, last_non_zero_yaw = 0.0f;
 float temp;
 float yaw_re = 0.0f, pitch_re = 0.0f;
 uint8_t fire_status = 0, fric_status = 0;
-
+uint32_t fire_mode_temp;
 float loop_constrain(float Input, float minValue, float maxValue);
 
 /*
@@ -255,6 +255,7 @@ void autoSolveTrajectory(uint32_t inAutoAiming)
     pitch_re = st.pitch;
     fire_status = st.fire;
     fric_status = st.fric_on;
+    
 	
 	//Conditionally start auto aiming
 	if(inAutoAiming==1)
@@ -281,10 +282,30 @@ void autoSolveTrajectory(uint32_t inAutoAiming)
             else if (pitch_re < -0.55f)
                 pitch_re = -0.5f;
             Robo_Push_Message_Cmd("Set_Gimbal_Pitch_Angle", pitch_re);
-
+            switch(fire_status)
+            {
+                case Shoot_Fire:
+                    fire_mode_temp = Shoot_Fire;
+                    break;
+                case Shoot_Single_Shot:
+                    fire_mode_temp = Shoot_Single_Shot;
+                    break;
+                case Shoot_Ready:
+                    fire_mode_temp = Shoot_Ready;
+                    break;
+                case Shoot_Off:
+                    fire_mode_temp = Shoot_Off;
+                    break;
+                default:
+                    fire_mode_temp = Shoot_Off;
+                    break;
+            }
+            Robo_Push_Message_Cmd("Shoot_Mode_temp", fire_mode_temp);
         }
         else
         {
+            fire_mode_temp = Shoot_Off;
+            Robo_Push_Message_Cmd("Shoot_Mode_temp", fire_mode_temp);
         //     temp = 0;
         //     Robo_Push_Message_Cmd("AA Detected", temp);
         //     Robo_Get_Message_Cmd("Set_Gimbal_Yaw_Angle", temp);
