@@ -210,7 +210,7 @@
 
 //PID param
 #define Pitch_Speed_KP 800
-#define Pitch_Speed_KI 1000
+#define Pitch_Speed_KI 1200
 #define Pitch_Speed_KD 0.7f
 
 #define Pitch_Position_KP 120
