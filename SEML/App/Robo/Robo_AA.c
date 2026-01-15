@@ -323,6 +323,8 @@ void autoSolveTrajectory(uint32_t inAutoAiming)
         absolute_yaw = 0.0f;
         expect_delta_pitch = 0.0f;
         expect_delta_yaw = 0.0f;
+        fire_mode_temp = 0;
+        Robo_Push_Message_Cmd("Shoot_Mode_temp", fire_mode_temp);
     }		
 }
 
